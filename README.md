@@ -66,7 +66,7 @@ A real-time notification system that displays toast notifications on your TouchP
     "uber eats": { "color": "#06c167" }
   }
 }
-   ```
+  ``` ```
 The SMS_SECRET can be whatever you want, but needs to be used later on your phone.
 
 
