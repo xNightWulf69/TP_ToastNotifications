@@ -72,6 +72,9 @@ Notifications from PushBullet or Forward SMS will now appear as toast notificati
 
 Customize sounds by replacing notification.mp3 in the sounds/ folder. //Must still be called notification.mp3
 
+
+After running `node server.js` you currently need to keep that terminal window open for this to work. // This will be probably be changed in the future to make it more user friendly
+
 ### Troubleshooting
 - Ensure your phone and PC are on the same local network.
 
