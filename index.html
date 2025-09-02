@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toast Notifications</title>
+<style>
+  html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-family:Arial,sans-serif; background:black; }
+  #toast-container {
+    position: fixed; bottom:0; left:0; width:100vw; height:50vh;
+    display:flex; flex-direction:column-reverse; align-items:center; gap:2vh;
+    pointer-events:none; z-index:9999; padding:2vh 0;
+  }
+  .toast {
+    background-color: rgba(20,20,20,0.95); padding:3vh 3vw; border-radius:3vh; border:1vw solid white;
+    width:100vw; height:50vh; box-sizing:border-box; display:flex; flex-direction:column; justify-content:flex-start; align-items:flex-start;
+    font-size:14vh; line-height:1.1; opacity:0; transform:translateY(20px); transition: all 0.5s ease;
+  }
+  .toast.show { opacity:1; transform:translateY(0); }
+  .toast-header { display:flex; align-items:center; margin-bottom:2vh; }
+  .toast-icon { width:40px; height:40px; margin-right:2vw; border-radius:15%; }
+  .toast-app { font-size:30px; font-weight:bold; color:white; }
+  .toast-text { font-size:6vh; word-break:break-word; color:white; }
+</style>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<script>
+const WS_IP = "127.0.0.0"; // Change this to your IPv4 Address
+const toastContainer = document.getElementById('toast-container');
+const MAX_TOASTS = 2;
+
+
+// Map of app names to their colours, this changes the toast border colour based off the app name. Make sure you input the correct app name.
+const appMap = {
+  'whatsapp': { color:'#25D366' },
+  'messenger': { color:'#0084FF' },
+  'snapchat': { color:'#FFFC00' },
+  'pushbullet': { color:'#4ab367' },
+  'discord': { color:'#5d6feb' },
+  'instagram': { color:'#fe089f' },
+  'x': { color:'#ffffff' },
+  'gmail': { color:'#ce3c30' },
+  'outlook': { color:'#0078D4' },
+  'facebook': { color:'#1877F2' },
+  'youtube': { color:'#FF0000' },
+  'uber eats': { color:'#06c167' }
+};
+const ws = new WebSocket(`ws://${WS_IP}:8080`);
+ws.onopen = () => console.log('Connected to WebSocket server');
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if ((!data.title || data.title.trim() === '') && (!data.body || data.body.trim() === '')) return;
+  showToast(data.app || 'Notification', data.title, data.body, data.icon || '', data.isSMS || false);
+};
+
+function showToast(appName, title, body, iconSrc, isSMS) {
+  const toast = document.createElement('div');
+  toast.classList.add('toast');
+
+  const lowerApp = appName.toLowerCase();
+
+  toast.style.borderColor = isSMS ? '#0095d2' : (appMap[lowerApp] ? appMap[lowerApp].color : 'white');
+
+  toast.innerHTML = `
+    <div class="toast-header">
+      <img class="toast-icon" src="${iconSrc}" alt="App Icon">
+      <div class="toast-app">${appName}</div>
+    </div>
+    <div class="toast-text">${title}<br>${body}</div>
+  `;
+  toastContainer.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+
+  setTimeout(() => removeToast(toast), 8000);
+
+  if (toastContainer.children.length > 2) {
+    removeToast(toastContainer.firstChild);
+  }
+}
+
+function removeToast(toast) {
+  toast.classList.remove('show');
+  setTimeout(() => toast.remove(), 500);
+}
+</script>
+
+</body>
+</html>
