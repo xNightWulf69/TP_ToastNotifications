@@ -47,8 +47,8 @@ Open PushBullet and login to the same Google account as you used for step 3.
 Go through the setup giving any perms it needs and then go to Mirroring and enable Notification Mirroring
 
 Now Open Forward SMS, Add rule > Basic Rule and change where to forward SMS to URL, click edit URL config and use these settings:
-    Method: Post
-    URL: http://127.0.0.0:3000/sms //Change 127.0.0.0 to your IPv4 Address from your PC you got earlier.
+    Method: `Post`
+    URL: `http://127.0.0.0:3000/sms` //Change 127.0.0.0 to your IPv4 Address from your PC you got earlier.
     Body:
 `{
 "sender": "{sender}",
