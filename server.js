@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 const express = require('express');
 const path = require('path');
+const bodyParser = require('body-parser');
 
 const PUSHBULLET_ACCESS_TOKEN = 'AccessToken'; // Change this to your PushBullet Access Token
 const SMS_SECRET = 'Secret'; // Change this to your Forward SMS secret
@@ -52,6 +53,7 @@ pbWs.on('message', (msg) => {
 pbWs.on('error', (err) => console.error('Pushbullet WebSocket error:', err));
 
 const app = express();
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 app.use('/sounds', express.static(path.join(__dirname, 'sounds')));
 
