@@ -176,12 +176,11 @@ Once configured, notifications from PushBullet or Forward SMS will automatically
 ```
 TP_ToastNotifications/
 ├── server.js           # Main server application
+├── index.html      # WebView interface
 ├── config.json         # Configuration file
 ├── package.json        # Node.js dependencies
 ├── sounds/
 │   └── notification.mp3 # Default notification sound
-├── public/
-│   └── index.html      # WebView interface
 └── README.md           # This file
 ```
 
