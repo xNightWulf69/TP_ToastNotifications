@@ -27,9 +27,11 @@
 <body>
 
 <div id="toast-container"></div>
+<audio id="notification-sound" src="sounds/notification.mp3"></audio>
 
 <script>
 const toastContainer = document.getElementById('toast-container');
+const notificationSound = document.getElementById('notification-sound');
 const MAX_TOASTS = 2;
 let appMap = {}; // <-- declare globally
 
@@ -65,6 +67,9 @@ function showToast(appName, title, body, iconSrc, isSMS) {
   `;
   toastContainer.appendChild(toast);
   requestAnimationFrame(() => toast.classList.add('show'));
+  // Play sound
+  notificationSound.currentTime = 0;
+  notificationSound.play().catch(() => {});
 
   setTimeout(() => removeToast(toast), 8000);
 
