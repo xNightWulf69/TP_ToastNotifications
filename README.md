@@ -47,7 +47,8 @@ Now Open Forward SMS, Add rule > Basic Rule and change where to forward SMS to U
 `{
 "sender": "{sender}",
 "message": "{msg}",
-"secret": "" `  //Change this to the SMS_SECRET you set in server.js earlier.
+"secret": ""  //Change this to the SMS_SECRET you set in server.js earlier.
+}`
 
 ### 5. Setting up Node.js
 Go to the folder where server.js is, right click and select `Open In Terminal`
