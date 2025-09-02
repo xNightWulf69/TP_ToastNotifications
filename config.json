@@ -1,0 +1,18 @@
+{
+  "PUSHBULLET_ACCESS_TOKEN": "Token",
+  "SMS_SECRET": "Secret",
+  "appMap": {
+    "whatsapp": { "color": "#25D366" },
+    "messenger": { "color": "#0084FF" },
+    "snapchat": { "color": "#FFFC00" },
+    "pushbullet": { "color": "#4ab367" },
+    "discord": { "color": "#5d6feb" },
+    "instagram": { "color": "#fe089f" },
+    "x": { "color": "#ffffff" },
+    "gmail": { "color": "#ce3c30" },
+    "outlook": { "color": "#0078D4" },
+    "facebook": { "color": "#1877F2" },
+    "youtube": { "color": "#FF0000" },
+    "uber eats": { "color": "#06c167" }
+  }
+}

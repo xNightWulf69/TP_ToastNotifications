@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/config.js"></script>
 <title>Toast Notifications</title>
 <style>
   html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; font-family:Arial,sans-serif; background:black; }
@@ -28,26 +29,17 @@
 <div id="toast-container"></div>
 
 <script>
-const WS_IP = "127.0.0.0"; // Change this to your IPv4 Address
 const toastContainer = document.getElementById('toast-container');
 const MAX_TOASTS = 2;
+let appMap = {}; // <-- declare globally
 
+// fetch config from server
+fetch('/config')
+  .then(res => res.json())
+  .then(data => {
+    appMap = data.appMap; // assign to global variable
+  });
 
-// Map of app names to their colours, this changes the toast border colour based off the app name. Make sure you input the correct app name.
-const appMap = {
-  'whatsapp': { color:'#25D366' },
-  'messenger': { color:'#0084FF' },
-  'snapchat': { color:'#FFFC00' },
-  'pushbullet': { color:'#4ab367' },
-  'discord': { color:'#5d6feb' },
-  'instagram': { color:'#fe089f' },
-  'x': { color:'#ffffff' },
-  'gmail': { color:'#ce3c30' },
-  'outlook': { color:'#0078D4' },
-  'facebook': { color:'#1877F2' },
-  'youtube': { color:'#FF0000' },
-  'uber eats': { color:'#06c167' }
-};
 const ws = new WebSocket(`ws://${WS_IP}:8080`);
 ws.onopen = () => console.log('Connected to WebSocket server');
 ws.onmessage = (event) => {

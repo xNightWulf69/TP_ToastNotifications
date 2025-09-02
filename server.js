@@ -1,14 +1,74 @@
 const WebSocket = require('ws');
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
+const os = require('os');
 
-const PUSHBULLET_ACCESS_TOKEN = 'AccessToken'; // Change this to your PushBullet Access Token
-const SMS_SECRET = 'Secret'; // Change this to your Forward SMS secret
-const WS_IP = '127.0.0.0'; // Change this to your IPv4 Address
+// Get local IPv4
+function getIPv4() {
+  const nets = os.networkInterfaces();
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      if (net.family === 'IPv4' && !net.internal) {
+        return net.address;
+      }
+    }
+  }
+  return '127.0.0.1';
+}
+
+const WS_IP = getIPv4();
 const WS_PORT = 8080;
 const HTTP_PORT = 3000;
+const rawConfig = fs.readFileSync('config.json');
+const config = JSON.parse(rawConfig);
 
+const PUSHBULLET_ACCESS_TOKEN = config.PUSHBULLET_ACCESS_TOKEN;
+const SMS_SECRET = config.SMS_SECRET;
+
+
+// Initialize Express first
+const app = express();
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname)));
+app.use('/sounds', express.static(path.join(__dirname, 'sounds')));
+
+// Serve config.js with WS_IP
+app.get('/config.js', (req, res) => {
+  res.type('application/javascript');
+  res.send(`const WS_IP = "${WS_IP}";`);
+});
+
+app.get('/config', (req, res) => {
+  res.json({ appMap: config.appMap });
+});
+
+// HTTP endpoint for receiving SMS
+app.post('/sms', (req, res) => {
+  if (req.body.secret !== SMS_SECRET) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  const { sender, message } = req.body;
+  if (!message) return res.sendStatus(400);
+
+  const smsNotification = {
+    app: sender,
+    title: '',
+    body: message,
+    icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6...',
+  };
+
+  sendNotification(smsNotification);
+  res.sendStatus(200);
+});
+
+// Start Express HTTP server
+app.listen(HTTP_PORT, () => {
+  console.log(`HTTP server running on http://${WS_IP}:${HTTP_PORT}`);
+});
+
+// WebSocket server
 const wss = new WebSocket.Server({ port: WS_PORT });
 console.log(`WebSocket server running on ws://${WS_IP}:${WS_PORT}`);
 
@@ -22,6 +82,7 @@ function sendNotification(notification) {
   });
 }
 
+// Pushbullet WebSocket
 const pbWs = new WebSocket('wss://stream.pushbullet.com/websocket/' + PUSHBULLET_ACCESS_TOKEN);
 
 pbWs.on('open', () => console.log('Connected to Pushbullet Realtime API'));
@@ -42,17 +103,14 @@ pbWs.on('message', (msg) => {
       title: push.title || '',
       body: push.body || '',
       app: push.application_name || 'Notification',
-      icon: iconUrl
+      icon: iconUrl,
     };
-
-    console.log('Sending Pushbullet notification:', notification);
     sendNotification(notification);
   }
 });
 
 pbWs.on('error', (err) => console.error('Pushbullet WebSocket error:', err));
 
-const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
 app.use('/sounds', express.static(path.join(__dirname, 'sounds')));
