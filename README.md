@@ -30,9 +30,11 @@ A real-time notification system that displays toast notifications on your TouchP
    cd TP_ToastNotifications
    ```
    
-   *Or download as ZIP from GitHub: Code → Download ZIP*
+   *Or download as ZIP from GitHub: Code → Download ZIP → Then extract the folder to where you want it*
 
 2. **Install Node.js dependencies**
+   In the folder you extracted, right click a blank space in the folder and click `Open in Terminal`
+   In the terminal run:
    ```bash
    npm install
    ```
@@ -117,6 +119,7 @@ for /f "tokens=2 delims=:" %a in ('ipconfig ^| find "IPv4"') do @echo %a
 ### Step 6: Install as Windows Service
 
 1. Install the service manager:
+   In the terminal used to run npm install run:
    ```cmd
    nssm install TP_ToastNotifications
    ```
