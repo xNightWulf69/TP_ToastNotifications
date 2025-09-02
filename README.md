@@ -9,7 +9,9 @@ A real-time notification system that displays toast notifications on your TouchP
 ## 🌟 Features
 
 - **Real-time notifications**: Instant display of phone notifications on your TouchPortal tablet
+- **Multi-app support**: Works with PushBullet and Forward SMS
 - **Customizable**: Replace notification sounds with your own audio files
+- **Private & secure**: All notifications stay within your local network - no data leaves your home
 - **Toast-style UI**: Clean, non-intrusive notification display
 
 ## 📋 Prerequisites
@@ -28,11 +30,9 @@ A real-time notification system that displays toast notifications on your TouchP
    cd TP_ToastNotifications
    ```
    
-   *Or download as ZIP from GitHub: Code → Download ZIP → Then extract the folder to where you want it*
+   *Or download as ZIP from GitHub: Code → Download ZIP*
 
 2. **Install Node.js dependencies**
-   In the folder you extracted, right click a blank space in the folder and clock `Open in Terminal`
-   In the terminal run:
    ```bash
    npm install
    ```
@@ -48,27 +48,25 @@ A real-time notification system that displays toast notifications on your TouchP
 1. Open `config.json` in your preferred text editor
 2. Update the following settings:
    ```json
-{
-  "PUSHBULLET_ACCESS_TOKEN": "YourTokenHere",
-  "SMS_SECRET": "Secret",
-  "appMap": {
-    "whatsapp": { "color": "#25D366" },
-    "messenger": { "color": "#0084FF" },
-    "snapchat": { "color": "#FFFC00" },
-    "pushbullet": { "color": "#4ab367" },
-    "discord": { "color": "#5d6feb" },
-    "instagram": { "color": "#fe089f" },
-    "x": { "color": "#ffffff" },
-    "gmail": { "color": "#ce3c30" },
-    "outlook": { "color": "#0078D4" },
-    "facebook": { "color": "#1877F2" },
-    "youtube": { "color": "#FF0000" },
-    "uber eats": { "color": "#06c167" }
-  }
-}
-  ``` ```
-The SMS_SECRET can be whatever you want, but needs to be used later on your phone.
-
+   {
+     "PUSHBULLET_ACCESS_TOKEN": "your_pushbullet_token_here",
+     "SMS_SECRET": "your_chosen_password_here",
+     "appMap": {
+       "whatsapp": { "color": "#25D366" },
+       "messenger": { "color": "#0084FF" },
+       "snapchat": { "color": "#FFFC00" },
+       "pushbullet": { "color": "#4ab367" },
+       "discord": { "color": "#5d6feb" },
+       "instagram": { "color": "#fe089f" },
+       "x": { "color": "#ffffff" },
+       "gmail": { "color": "#ce3c30" },
+       "outlook": { "color": "#0078D4" },
+       "facebook": { "color": "#1877F2" },
+       "youtube": { "color": "#FF0000" },
+       "uber eats": { "color": "#06c167" }
+     }
+   }
+   ```
 
 ### 🎨 Customize Notification Colors
 
@@ -83,7 +81,6 @@ The `appMap` section allows you to customize the toast notification border color
 ```json
 "tiktok": { "color": "#FF0050" }
 ```
-
 
 ### Step 4: Get Your PC's IP Address
 
@@ -120,7 +117,6 @@ for /f "tokens=2 delims=:" %a in ('ipconfig ^| find "IPv4"') do @echo %a
 ### Step 6: Install as Windows Service
 
 1. Install the service manager:
-   In the terminal used to run npm install run:
    ```cmd
    nssm install TP_ToastNotifications
    ```
@@ -177,11 +173,12 @@ Once configured, notifications from PushBullet or Forward SMS will automatically
 ```
 TP_ToastNotifications/
 ├── server.js           # Main server application
-├── index.html          # WebView interface
 ├── config.json         # Configuration file
 ├── package.json        # Node.js dependencies
 ├── sounds/
 │   └── notification.mp3 # Default notification sound
+├── public/
+│   └── index.html      # WebView interface
 └── README.md           # This file
 ```
 
